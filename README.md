@@ -1,2 +1,1 @@
-# learn-fastly
-ddddd
+viceroy bin/main.wasm
