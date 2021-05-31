@@ -1,0 +1,4 @@
+[local_server.backends]
+  [local_server.backends.httpbin]
+  url = "http://httpbin.org:80"
+

@@ -1,1 +1,1 @@
-viceroy bin/main.wasm
+viceroy bin/main.wasm -C backends.toml
