@@ -1,7 +1,9 @@
 mod log;
+mod req;
 mod stream;
 
 use crate::log::*;
+use crate::req::*;
 use crate::stream::*;
 use anyhow::Result;
 use fastly::http::{header, Method, StatusCode};
@@ -20,7 +22,7 @@ fn main() -> Result<(), Error> {
     // Filter request methods...
     match req.get_method() {
         // Allow GET and HEAD requests.
-        &Method::GET | &Method::HEAD => (),
+        &Method::GET | &Method::HEAD | &Method::POST => (),
 
         // Accept PURGE requests; it does not matter to which backend they are sent.
         m if m == "PURGE" => {
@@ -81,7 +83,8 @@ fn main() -> Result<(), Error> {
 
         "/stream2" => stream_origin_to_client(BACKEND_NAME, false),
 
-        // Catch all other requests and return a 404.
+        path if path.starts_with("/req") => req_process(req, BACKEND_NAME),
+
         _ => {
             Response::from_status(StatusCode::NOT_FOUND)
                 .with_body_text_plain("The page you requested could not be found\n")
